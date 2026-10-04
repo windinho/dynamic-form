@@ -1,7 +1,7 @@
-import { LeadCapturePage } from "./features/lead-capture/pages/LeadFormPage";
+import { LeadFormPage } from "./features/lead-capture/pages/LeadFormPage";
 
 function App() {
-  return <LeadCapturePage />;
+  return <LeadFormPage />;
 }
 
 export default App;

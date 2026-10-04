@@ -1,0 +1,16 @@
+:root {
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  --control-height: 44px;
+  --control-padding-y: 10px;
+  --control-padding-x: 12px;
+
+  --textarea-min-height: 120px;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+}

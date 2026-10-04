@@ -1,35 +1,27 @@
 import { useState } from "react";
-import type { FieldConfig, FormErrors } from "./types";
+import type { FieldConfig, FormErrors, FormValues } from "./types";
 import { Field } from "../../molecules";
-import { Checkbox } from "../../atoms";
-import { TextInput } from "../../atoms";
-import { Select } from "../../atoms";
-import { TextArea } from "../../atoms";
-import { Button } from "../../atoms";
+import { Checkbox, TextArea, TextInput, Select, Button } from "../../atoms";
 import "./DynamicForm.css";
 
 interface DynamicFormProps {
   config: FieldConfig[];
-  validate: (
-    config: FieldConfig[],
-    values: Record<string, string | boolean>,
-  ) => Record<string, string>;
+  validate: (config: FieldConfig[], values: FormValues) => FormErrors;
 }
 
 export function DynamicForm({ config, validate }: DynamicFormProps) {
   const getInitialValue = (type: FieldConfig["type"]): string | boolean => {
     return type === "checkbox" ? false : "";
   };
-  const [values, setValues] = useState<Record<string, string | boolean>>(() =>
+  const [values, setValues] = useState<FormValues>(() =>
     Object.fromEntries(
       config.map((field) => [field.name, getInitialValue(field.type)]),
     ),
   );
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submittedValues, setSubmittedValues] = useState<Record<
-    string,
-    string | boolean
-  > | null>(null);
+  const [submittedValues, setSubmittedValues] = useState<FormValues | null>(
+    null,
+  );
 
   const handleChange = (name: string, value: string | boolean) => {
     setValues((prevValues) => ({
@@ -38,10 +30,91 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
     }));
   };
 
-  const handleBlur = () => {
+  const handleBlur = (name: string) => {
     const nextErrors = validate(config, values);
 
-    setErrors(nextErrors);
+    setErrors((prevErrors) => {
+      const updatedErrors = { ...prevErrors };
+
+      if (nextErrors[name]) {
+        updatedErrors[name] = nextErrors[name];
+      } else {
+        delete updatedErrors[name];
+      }
+
+      return updatedErrors;
+    });
+  };
+
+  const renderFieldControl = (field: FieldConfig) => {
+    {
+      if (field.type === "text")
+        return (
+          <TextInput
+            id={field.name}
+            value={String(values[field.name] ?? "")}
+            onChange={(value) => handleChange(field.name, value)}
+            hasError={Boolean(errors[field.name])}
+            errorId={`${field.name}-error`}
+            onBlur={() => handleBlur(field.name)}
+          />
+        );
+    }
+    {
+      if (field.type === "email")
+        return (
+          <TextInput
+            id={field.name}
+            type="email"
+            value={String(values[field.name] ?? "")}
+            onChange={(value) => handleChange(field.name, value)}
+            hasError={Boolean(errors[field.name])}
+            errorId={`${field.name}-error`}
+            onBlur={() => handleBlur(field.name)}
+          />
+        );
+    }
+    {
+      if (field.type === "select")
+        return (
+          <Select
+            id={field.name}
+            value={String(values[field.name] ?? "")}
+            options={field.options ?? []}
+            onChange={(value) => handleChange(field.name, value)}
+            hasError={Boolean(errors[field.name])}
+            errorId={`${field.name}-error`}
+            onBlur={() => handleBlur(field.name)}
+          />
+        );
+    }
+    {
+      if (field.type === "textarea")
+        return (
+          <TextArea
+            id={field.name}
+            value={String(values[field.name] ?? "")}
+            onChange={(value) => handleChange(field.name, value)}
+            hasError={Boolean(errors[field.name])}
+            errorId={`${field.name}-error`}
+            onBlur={() => handleBlur(field.name)}
+            maxLength={field.validations?.maxLength}
+          />
+        );
+    }
+    {
+      if (field.type === "checkbox")
+        return (
+          <Checkbox
+            id={field.name}
+            value={Boolean(values[field.name])}
+            onChange={(value) => handleChange(field.name, value)}
+            hasError={Boolean(errors[field.name])}
+            errorId={`${field.name}-error`}
+            onBlur={() => handleBlur(field.name)}
+          />
+        );
+    }
   };
 
   return (
@@ -55,7 +128,18 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
           if (Object.keys(nextErrors).length > 0) {
             return;
           }
-          setSubmittedValues(values);
+
+          const submittedData = Object.fromEntries(
+            config
+              .filter(
+                (field) =>
+                  !field.dependsOn ||
+                  values[field.dependsOn.field] === field.dependsOn.value,
+              )
+              .map((field) => [field.name, values[field.name]]),
+          );
+
+          setSubmittedValues(submittedData);
         }}
       >
         {config.map((field) => {
@@ -73,59 +157,9 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
               error={errors[field.name]}
               errorId={`${field.name}-error`}
               desktopSpan={field.desktopSpan}
+              variant={field.variant}
             >
-              {field.type === "text" && (
-                <TextInput
-                  id={field.name}
-                  value={String(values[field.name] ?? "")}
-                  onChange={(value) => handleChange(field.name, value)}
-                  hasError={Boolean(errors[field.name])}
-                  errorId={`${field.name}-error`}
-                  onBlur={handleBlur}
-                />
-              )}
-              {field.type === "email" && (
-                <TextInput
-                  id={field.name}
-                  type="email"
-                  value={String(values[field.name] ?? "")}
-                  onChange={(value) => handleChange(field.name, value)}
-                  hasError={Boolean(errors[field.name])}
-                  errorId={`${field.name}-error`}
-                  onBlur={handleBlur}
-                />
-              )}
-              {field.type === "select" && (
-                <Select
-                  id={field.name}
-                  value={String(values[field.name] ?? "")}
-                  options={field.options ?? []}
-                  onChange={(value) => handleChange(field.name, value)}
-                  hasError={Boolean(errors[field.name])}
-                  errorId={`${field.name}-error`}
-                  onBlur={handleBlur}
-                />
-              )}
-              {field.type === "textarea" && (
-                <TextArea
-                  id={field.name}
-                  value={String(values[field.name] ?? "")}
-                  onChange={(value) => handleChange(field.name, value)}
-                  hasError={Boolean(errors[field.name])}
-                  errorId={`${field.name}-error`}
-                  onBlur={handleBlur}
-                />
-              )}
-              {field.type === "checkbox" && (
-                <Checkbox
-                  id={field.name}
-                  value={Boolean(values[field.name])}
-                  onChange={(value) => handleChange(field.name, value)}
-                  hasError={Boolean(errors[field.name])}
-                  errorId={`${field.name}-error`}
-                  onBlur={handleBlur}
-                />
-              )}
+              {renderFieldControl(field)}
             </Field>
           );
         })}

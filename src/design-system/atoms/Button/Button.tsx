@@ -1,3 +1,5 @@
+import "./Button.css";
+
 interface ButtonProps {
   label: string;
   type?: "button" | "submit";
@@ -12,7 +14,12 @@ export function Button({
   onClick,
 }: ButtonProps) {
   return (
-    <button type={type} disabled={disabled} onClick={onClick}>
+    <button
+      className="button"
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+    >
       {label}
     </button>
   );

@@ -1,0 +1,43 @@
+.field {
+  width: 100%;
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.field__label {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.field__hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.field__error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+}
+
+.field--checkbox {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.field--checkbox .field__label {
+  order: 2;
+}
+
+.field--checkbox input {
+  order: 1;
+}
+
+.field--checkbox .field__error,
+.field--checkbox .field__hint {
+  width: 100%;
+  order: 3;
+}

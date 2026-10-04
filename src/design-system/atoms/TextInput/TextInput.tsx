@@ -1,3 +1,5 @@
+import "./TextInput.css";
+
 interface TextInputProps {
   id: string;
   value: string;
@@ -19,6 +21,7 @@ export const TextInput = ({
 }: TextInputProps) => (
   <input
     id={id}
+    className="input"
     type={type}
     value={value}
     onChange={(event) => onChange(event.target.value)}

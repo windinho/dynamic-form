@@ -1,0 +1,25 @@
+.textarea {
+  width: 100%;
+  min-height: var(--textarea-min-height);
+  padding: var(--control-padding-y) var(--control-padding-x);
+  box-sizing: border-box;
+
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  color: var(--color-text);
+
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  resize: vertical;
+}
+
+.textarea:focus {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 1px;
+}
+
+.textarea[aria-invalid="true"] {
+  border-color: var(--color-border-error);
+}

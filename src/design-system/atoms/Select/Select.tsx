@@ -1,4 +1,5 @@
 import type { SelectOption } from "../../forms/DynamicForm/types";
+import "./Select.css";
 
 interface SelectProps {
   id: string;
@@ -21,6 +22,7 @@ export const Select = ({
 }: SelectProps) => (
   <select
     id={id}
+    className="select"
     value={value}
     onChange={(event) => onChange(event.target.value)}
     onBlur={onBlur}

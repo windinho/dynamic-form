@@ -25,6 +25,7 @@ export function validateForm(
       (value === undefined || value === "" || value === false)
     ) {
       errors[field.name] = `${field.label} is required`;
+      continue;
     }
 
     if (

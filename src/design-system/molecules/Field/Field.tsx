@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-
+import "./Field.css";
 interface FieldProps {
   label: string;
   htmlFor: string;
@@ -8,6 +8,7 @@ interface FieldProps {
   hint?: string;
   children: ReactNode;
   desktopSpan?: 1 | 2;
+  variant?: "default" | "checkbox";
 }
 
 export function Field({
@@ -18,9 +19,12 @@ export function Field({
   hint,
   children,
   desktopSpan,
+  variant = "default",
 }: FieldProps) {
   return (
-    <div className={`field ${desktopSpan === 2 ? "field--span-2" : ""}`}>
+    <div
+      className={`field ${desktopSpan === 2 ? "field--span-2" : ""} ${variant === "checkbox" ? "field--checkbox" : ""}`}
+    >
       <label className="field__label" htmlFor={htmlFor}>
         {label}
       </label>

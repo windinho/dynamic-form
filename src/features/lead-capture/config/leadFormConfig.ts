@@ -43,7 +43,7 @@ export const leadFormConfig: FieldConfig[] = [
     name: "phone",
     type: "text",
     label: "Phone",
-    validations: { required: true, pattern: /^\d{10}$/ },
+    validations: { required: true, pattern: /^[6-9]\d{9}$/ },
   },
   {
     name: "notes",
@@ -62,5 +62,6 @@ export const leadFormConfig: FieldConfig[] = [
       required: true,
     },
     desktopSpan: 2,
+    variant: "checkbox",
   },
 ];

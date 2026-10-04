@@ -12,17 +12,20 @@ export interface ValidationRules {
   maxLength?: number;
 }
 
+export interface FieldDependency {
+  field: string;
+  value: string;
+}
+
 export interface FieldConfig {
   name: string;
   type: FieldType;
   label: string;
   options?: SelectOption[];
   validations?: ValidationRules;
-  dependsOn?: {
-    field: string;
-    value: string;
-  };
+  dependsOn?: FieldDependency;
   desktopSpan?: 1 | 2;
+  variant?: "default" | "checkbox";
 }
 
 export type FormValues = Record<string, string | boolean>;
