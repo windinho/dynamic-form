@@ -111,7 +111,6 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
             onChange={(value) => handleChange(field.name, value)}
             hasError={Boolean(errors[field.name])}
             errorId={`${field.name}-error`}
-            onBlur={() => handleBlur(field.name)}
           />
         );
     }
