@@ -126,7 +126,3 @@ This is configured using the `dependsOn` property in the field configuration.
 - Design-system components are reusable and feature-agnostic.
 - No component library was used.
 - TypeScript types are shared across the form system.
-
-```
-
-```
