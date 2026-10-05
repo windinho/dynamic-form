@@ -3,6 +3,7 @@ import type {
   FormErrors,
   FormValues,
 } from "../../../design-system/forms/DynamicForm/types";
+import { isFieldVisible } from "../../../design-system/forms/DynamicForm/utils";
 
 export function validateForm(
   config: FieldConfig[],
@@ -11,10 +12,7 @@ export function validateForm(
   const errors: FormErrors = {};
 
   for (const field of config) {
-    if (
-      field.dependsOn &&
-      values[field.dependsOn.field] !== field.dependsOn.value
-    ) {
+    if (!isFieldVisible(field, values)) {
       continue;
     }
 

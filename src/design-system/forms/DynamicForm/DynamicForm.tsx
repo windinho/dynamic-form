@@ -3,6 +3,7 @@ import type { FieldConfig, FormErrors, FormValues } from "./types";
 import { Field } from "../../molecules";
 import { Checkbox, TextArea, TextInput, Select, Button } from "../../atoms";
 import "./DynamicForm.css";
+import { isFieldVisible } from "./utils";
 
 interface DynamicFormProps {
   config: FieldConfig[];
@@ -126,11 +127,7 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
 
     const submittedData = Object.fromEntries(
       config
-        .filter(
-          (field) =>
-            !field.dependsOn ||
-            values[field.dependsOn.field] === field.dependsOn.value,
-        )
+        .filter((field) => isFieldVisible(field, values))
         .map((field) => [field.name, values[field.name]]),
     );
 
@@ -141,10 +138,7 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
     <>
       <form className="form" onSubmit={handleSubmit}>
         {config.map((field) => {
-          if (
-            field.dependsOn &&
-            values[field.dependsOn.field] !== field.dependsOn.value
-          ) {
+          if (!isFieldVisible(field, values)) {
             return null;
           }
 
