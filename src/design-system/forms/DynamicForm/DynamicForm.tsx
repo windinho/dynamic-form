@@ -147,6 +147,16 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
           ) {
             return null;
           }
+
+          const value = values[field.name];
+
+          const characterCount = typeof value === "string" ? value.length : 0;
+
+          const hint =
+            field.type === "textarea" && field.validations?.maxLength
+              ? `${characterCount} / ${field.validations.maxLength} characters`
+              : undefined;
+
           return (
             <Field
               key={field.name}
@@ -156,6 +166,7 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
               errorId={`${field.name}-error`}
               desktopSpan={field.desktopSpan}
               variant={field.variant}
+              hint={hint}
             >
               {renderFieldControl(field)}
             </Field>
