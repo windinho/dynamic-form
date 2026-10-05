@@ -1,4 +1,4 @@
-import "./TextArea.css";
+import "./Textarea.css";
 
 interface TextAreaProps {
   id: string;

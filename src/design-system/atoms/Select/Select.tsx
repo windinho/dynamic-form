@@ -29,7 +29,9 @@ export const Select = ({
     aria-invalid={hasError || undefined}
     aria-describedby={errorId}
   >
-    <option value="">Select an option</option>
+    <option value="" disabled>
+      Select an option
+    </option>
     {options.map((option) => (
       <option
         key={option.value}
