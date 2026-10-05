@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import type { FieldConfig, FormErrors, FormValues } from "./types";
 import { Field } from "../../molecules";
 import { Checkbox, TextArea, TextInput, Select, Button } from "../../atoms";
@@ -116,31 +116,30 @@ export function DynamicForm({ config, validate }: DynamicFormProps) {
     }
   };
 
+  const handleSubmit = (event: SyntheticEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    const nextErrors = validate(config, values);
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    const submittedData = Object.fromEntries(
+      config
+        .filter(
+          (field) =>
+            !field.dependsOn ||
+            values[field.dependsOn.field] === field.dependsOn.value,
+        )
+        .map((field) => [field.name, values[field.name]]),
+    );
+
+    setSubmittedValues(submittedData);
+  };
+
   return (
     <>
-      <form
-        className="form"
-        onSubmit={(event) => {
-          event.preventDefault();
-          const nextErrors = validate(config, values);
-          setErrors(nextErrors);
-          if (Object.keys(nextErrors).length > 0) {
-            return;
-          }
-
-          const submittedData = Object.fromEntries(
-            config
-              .filter(
-                (field) =>
-                  !field.dependsOn ||
-                  values[field.dependsOn.field] === field.dependsOn.value,
-              )
-              .map((field) => [field.name, values[field.name]]),
-          );
-
-          setSubmittedValues(submittedData);
-        }}
-      >
+      <form className="form" onSubmit={handleSubmit}>
         {config.map((field) => {
           if (
             field.dependsOn &&
